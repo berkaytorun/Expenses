@@ -16,6 +16,7 @@ export const RecentExpenses = () => {
         <ExpensesOutput
             expenses={recentExpenses}
             expensesPeriod='Recent'
+            fallbackText='No recent expenses'
         />
     );
 };

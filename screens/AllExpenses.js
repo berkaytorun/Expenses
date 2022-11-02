@@ -9,6 +9,7 @@ export const AllExpenses = () => {
         <ExpensesOutput
             expenses={expensesContext.expenses}
             expensesPeriod='All Expenses'
+            fallbackText='No expenses'
         />
     );
 };
