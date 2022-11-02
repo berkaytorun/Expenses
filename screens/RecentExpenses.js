@@ -1,5 +1,5 @@
-import { Text } from 'react-native';
+import { ExpensesOutput } from '../components/ExpensesOutput/ExpensesOutput';
 
 export const RecentExpenses = () => {
-    return <Text> RecentExpenses</Text>;
+    return <ExpensesOutput expensesPeriod='Recent' />;
 };
