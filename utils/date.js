@@ -5,3 +5,10 @@ export const getFormattedDate = (date) => {
     const day = date.getDate();
     return `${day}/${month}/${year}`;
 };
+
+export const getDateMinusDays = (date, days) => {
+    // Get a new date object with the specified number of days subtracted from the date.
+    const newDate = new Date(date);
+    newDate.setDate(newDate.getDate() - days);
+    return newDate;
+};
