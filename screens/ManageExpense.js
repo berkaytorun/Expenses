@@ -1,7 +1,7 @@
 import { useContext, useLayoutEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button } from '../components/Button';
 import { IconButton } from '../components/IconButton';
+import { ExpenseForm } from '../components/ManageExpense/ExpenseForm';
 import { ExpensesContext } from '../store/expenses-context';
 import { GlobalStyles } from '../utils/styles';
 
@@ -19,38 +19,27 @@ export const ManageExpense = ({ route, navigation }) => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.buttonContainer}>
-                <Button
-                    style={styles.button}
-                    mode='flat'
-                    onPress={() => {
-                        navigation.goBack();
-                    }}
-                >
-                    Cancel
-                </Button>
-                <Button
-                    onPress={() => {
-                        if (isEditing) {
-                            expensesContext.updateExpense(expenseId, {
-                                description: 'Test!!!!',
-                                amount: 2.99,
-                                date: new Date(),
-                            });
-                        } else {
-                            expensesContext.addExpense({
-                                description: 'Test',
-                                amount: 100,
-                                date: new Date(),
-                            });
-                        }
-                        navigation.goBack();
-                    }}
-                    style={styles.button}
-                >
-                    {isEditing ? 'Update' : 'Add'}
-                </Button>
-            </View>
+            <ExpenseForm
+                onCancel={() => navigation.goBack()}
+                onSubmit={(expense) => {
+                    if (isEditing) {
+                        expensesContext.updateExpense(expenseId, {
+                            description: 'Test!!!!',
+                            amount: 2.99,
+                            date: new Date(),
+                        });
+                    } else {
+                        expensesContext.addExpense({
+                            description: 'Test',
+                            amount: 100,
+                            date: new Date(),
+                        });
+                    }
+                    navigation.goBack();
+                }}
+                submitButtonLabel={isEditing ? 'Update' : 'Add'}
+            />
+
             {isEditing && (
                 <View style={styles.deleteContainer}>
                     <IconButton
@@ -74,15 +63,7 @@ const styles = StyleSheet.create({
         backgroundColor: GlobalStyles.colors.primary800,
         padding: 12,
     },
-    buttonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    button: {
-        marginHorizontal: 4,
-        minWidth: 100,
-    },
+
     deleteContainer: {
         marginTop: 16,
         paddingTop: 8,
