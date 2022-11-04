@@ -22,12 +22,12 @@ export const ManageExpense = ({ route, navigation }) => {
         <View style={styles.container}>
             <ExpenseForm
                 onCancel={() => navigation.goBack()}
-                onSubmit={(expenseData) => {
+                onSubmit={async (expenseData) => {
                     if (isEditing) {
                         expensesContext.updateExpense(expenseId, expenseData);
                     } else {
-                        storeExpense(expenseData);
-                        expensesContext.addExpense(expenseData);
+                        const id = await storeExpense(expenseData);
+                        expensesContext.addExpense({ ...expenseData, id: id });
                     }
                     navigation.goBack();
                 }}
