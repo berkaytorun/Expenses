@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { IconButton } from '../components/IconButton';
 import { ExpenseForm } from '../components/ManageExpense/ExpenseForm';
 import { ExpensesContext } from '../store/expenses-context';
+import { storeExpense } from '../utils/http';
 import { GlobalStyles } from '../utils/styles';
 
 export const ManageExpense = ({ route, navigation }) => {
@@ -21,20 +22,18 @@ export const ManageExpense = ({ route, navigation }) => {
         <View style={styles.container}>
             <ExpenseForm
                 onCancel={() => navigation.goBack()}
-                onSubmit={(expense) => {
+                onSubmit={(expenseData) => {
                     if (isEditing) {
-                        expensesContext.updateExpense(expenseId, expense);
+                        expensesContext.updateExpense(expenseId, expenseData);
                     } else {
-                        expensesContext.addExpense(expense);
+                        storeExpense(expenseData);
+                        expensesContext.addExpense(expenseData);
                     }
                     navigation.goBack();
                 }}
                 submitButtonLabel={isEditing ? 'Update' : 'Add'}
-                defaultValues={
-                    isEditing ? expensesContext.expenses.find((expense) => expense.id === expenseId) : null
-                }
+                defaultValues={isEditing ? expensesContext.expenses.find((expense) => expense.id === expenseId) : null}
             />
-
             {isEditing && (
                 <View style={styles.deleteContainer}>
                     <IconButton
