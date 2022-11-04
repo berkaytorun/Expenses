@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { IconButton } from '../components/IconButton';
 import { ExpenseForm } from '../components/ManageExpense/ExpenseForm';
 import { ExpensesContext } from '../store/expenses-context';
-import { storeExpense } from '../utils/http';
+import { deleteExpense, storeExpense, updateExpense } from '../utils/http';
 import { GlobalStyles } from '../utils/styles';
 
 export const ManageExpense = ({ route, navigation }) => {
@@ -25,6 +25,7 @@ export const ManageExpense = ({ route, navigation }) => {
                 onSubmit={async (expenseData) => {
                     if (isEditing) {
                         expensesContext.updateExpense(expenseId, expenseData);
+                        await updateExpense(expenseId, expenseData);
                     } else {
                         const id = await storeExpense(expenseData);
                         expensesContext.addExpense({ ...expenseData, id: id });
@@ -42,6 +43,7 @@ export const ManageExpense = ({ route, navigation }) => {
                         size={36}
                         onPress={() => {
                             expensesContext.deleteExpense(expenseId);
+                            deleteExpense(expenseId);
                             navigation.goBack();
                         }}
                     />

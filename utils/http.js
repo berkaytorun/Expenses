@@ -5,7 +5,7 @@ import { getFormattedDate } from './date';
 export const storeExpense = async (expenseData) => {
     const response = await axios.post(URL + 'expenses.json', expenseData);
     const id = response.data.name;
-    
+
     return id;
 };
 
@@ -24,4 +24,12 @@ export const getExpenses = async () => {
     }
 
     return expenses;
+};
+
+export const updateExpense = (id, expenseData) => {
+    return axios.put(URL + 'expenses/' + id + '.json', expenseData);
+};
+
+export const deleteExpense = (id) => {
+    return axios.delete(URL + 'expenses/' + id + '.json');
 };
