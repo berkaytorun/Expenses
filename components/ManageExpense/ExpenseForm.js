@@ -2,15 +2,43 @@ import { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Input } from './Input';
 import { Button } from '../Button';
+import { getFormattedDate } from '../../utils/date';
 
-export const ExpenseForm = ({ onCancel, onSubmit, submitButtonLabel }) => {
+export const ExpenseForm = ({ onCancel, onSubmit, submitButtonLabel, defaultValues }) => {
     const [inputValues, setInputValues] = useState({
-        amount: '',
-        date: '',
-        description: '',
+        amount: defaultValues ? defaultValues.amount.toString() : '',
+        date: defaultValues ? getFormattedDate(defaultValues.date) : getFormattedDate(new Date()),
+        description: defaultValues ? defaultValues.description : '',
     });
 
-    const submitHandler = () => {};
+    const submitHandler = () => {
+        const expenseData = {
+            amount: +inputs.amount.value,
+            date: new Date(inputs.date.value),
+            description: inputs.description.value,
+        };
+
+        const amountIsValid = !isNaN(expenseData.amount) && expenseData.amount > 0;
+        const dateIsValid = expenseData.date.toString() !== 'Invalid Date';
+        const descriptionIsValid = expenseData.description.trim().length > 0;
+
+        if (!amountIsValid || !dateIsValid || !descriptionIsValid) {
+            // Alert.alert('Invalid input', 'Please check your input values');
+            setInputs((currentInputs) => {
+                return {
+                    amount: { value: currentInputs.amount.value, isValid: amountIsValid },
+                    date: { value: currentInputs.date.value, isValid: dateIsValid },
+                    description: {
+                        value: currentInputs.description.value,
+                        isValid: descriptionIsValid,
+                    },
+                };
+            });
+            return;
+        }
+
+        onSubmit(expenseData);
+    };
 
     return (
         <View style={styles.form}>
@@ -25,7 +53,7 @@ export const ExpenseForm = ({ onCancel, onSubmit, submitButtonLabel }) => {
                             setInputValues((curInputValues) => {
                                 return {
                                     ...curInputValues,
-                                    amount: inputText,
+                                    amount: Number(inputText.replace(',', '.')),
                                 };
                             });
                         },
@@ -74,7 +102,7 @@ export const ExpenseForm = ({ onCancel, onSubmit, submitButtonLabel }) => {
                     Cancel
                 </Button>
                 <Button
-                    onPress={onSubmit}
+                    onPress={submitHandler}
                     style={styles.button}
                 >
                     {submitButtonLabel}

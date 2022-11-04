@@ -23,21 +23,16 @@ export const ManageExpense = ({ route, navigation }) => {
                 onCancel={() => navigation.goBack()}
                 onSubmit={(expense) => {
                     if (isEditing) {
-                        expensesContext.updateExpense(expenseId, {
-                            description: 'Test!!!!',
-                            amount: 2.99,
-                            date: new Date(),
-                        });
+                        expensesContext.updateExpense(expenseId, expense);
                     } else {
-                        expensesContext.addExpense({
-                            description: 'Test',
-                            amount: 100,
-                            date: new Date(),
-                        });
+                        expensesContext.addExpense(expense);
                     }
                     navigation.goBack();
                 }}
                 submitButtonLabel={isEditing ? 'Update' : 'Add'}
+                defaultValues={
+                    isEditing ? expensesContext.expenses.find((expense) => expense.id === expenseId) : null
+                }
             />
 
             {isEditing && (
