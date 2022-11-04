@@ -5,16 +5,19 @@ import { Button } from '../Button';
 import { getFormattedDate } from '../../utils/date';
 
 export const ExpenseForm = ({ onCancel, onSubmit, submitButtonLabel, defaultValues }) => {
-    const [inputValues, setInputValues] = useState({
-        amount: defaultValues ? defaultValues.amount.toString() : '',
-        date: defaultValues ? getFormattedDate(defaultValues.date) : getFormattedDate(new Date()),
-        description: defaultValues ? defaultValues.description : '',
+    const [inputs, setInputs] = useState({
+        amount: { value: defaultValues ? defaultValues.amount.toString() : '', isValid: !!defaultValues },
+        date: {
+            value: defaultValues ? getFormattedDate(defaultValues.date) : getFormattedDate(new Date()),
+            isValid: !!defaultValues,
+        },
+        description: { value: defaultValues ? defaultValues.description : '', isValid: !!defaultValues },
     });
 
     const submitHandler = () => {
         const expenseData = {
             amount: +inputs.amount.value,
-            date: new Date(inputs.date.value),
+            date: new Date(inputs.date.value.replace(/(\d+[/])(\d+[/])/, '$2$1')),
             description: inputs.description.value,
         };
 
@@ -50,14 +53,17 @@ export const ExpenseForm = ({ onCancel, onSubmit, submitButtonLabel, defaultValu
                     textInputConfig={{
                         keyboardType: 'decimal-pad',
                         onChangeText: (inputText) => {
-                            setInputValues((curInputValues) => {
+                            setInputs((curInputValues) => {
                                 return {
                                     ...curInputValues,
-                                    amount: Number(inputText.replace(',', '.')),
+                                    amount: {
+                                        value: Number(inputText.replace(',', '.')),
+                                        isValid: true,
+                                    },
                                 };
                             });
                         },
-                        value: inputValues.amount,
+                        value: inputs.amount.value,
                     }}
                 />
                 <Input
@@ -67,14 +73,17 @@ export const ExpenseForm = ({ onCancel, onSubmit, submitButtonLabel, defaultValu
                         placeholder: 'DD/MM/YYYY',
                         maxLength: 10,
                         onChangeText: (inputText) => {
-                            setInputValues((curInputValues) => {
+                            setInputs((curInputValues) => {
                                 return {
                                     ...curInputValues,
-                                    date: inputText,
+                                    date: {
+                                        value: inputText,
+                                        isValid: true,
+                                    },
                                 };
                             });
                         },
-                        value: inputValues.date,
+                        value: inputs.date.value,
                     }}
                 />
             </View>
@@ -83,14 +92,17 @@ export const ExpenseForm = ({ onCancel, onSubmit, submitButtonLabel, defaultValu
                 textInputConfig={{
                     multiline: true,
                     onChangeText: (inputText) => {
-                        setInputValues((curInputValues) => {
+                        setInputs((curInputValues) => {
                             return {
                                 ...curInputValues,
-                                description: inputText,
+                                description: {
+                                    value: inputText,
+                                    isValid: true,
+                                },
                             };
                         });
                     },
-                    value: inputValues.description,
+                    value: inputs.description.value,
                 }}
             />
             <View style={styles.buttonContainer}>
